@@ -6,6 +6,11 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth/ window.innerHe
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
 
+var loader = new THREE.TextureLoader()
+loader.load('./img/Agua.jpg', function(texture) {
+	scene.background = texture
+})
+
 document.body.appendChild( renderer.domElement );
 {
 	const color = 0x000000;  // white
@@ -17,10 +22,19 @@ document.body.appendChild( renderer.domElement );
 
 
 const geometry = new THREE.CircleGeometry( 12, 12, 12 );
-const material = new THREE.MeshBasicMaterial( { color: 0xF5B041} );
+
+const textureLoader = new THREE.TextureLoader();
+	const matcap = textureLoader.load('../img/papel.jpg');
+	const material = new THREE.MeshMatcapMaterial( );
+	material.matcap = matcap;
+	material.flatShading = true;
+
 const circle = new THREE.Mesh( geometry, material );
 scene.add( circle );
 
+
+const edges = new THREE.CircleGeometry( geometry );
+const line = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: 0x000000 } ) );
 camera.position.z =31;
 
 function animate() {
@@ -28,6 +42,8 @@ function animate() {
 	circle.rotation.x += 0.09;
 	circle.rotation.y += 0.0019;
 
+	line.rotation.x += 0.09;
+	line.rotation.y += 0.09;
 	renderer.render( scene, camera );
 }
 animate();
